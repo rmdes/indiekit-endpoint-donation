@@ -1,0 +1,15 @@
+{# Shared layout for all donation admin pages.
+   Extends Indiekit's global admin layout (document.njk from @indiekit/frontend) —
+   inheriting nav, auth chrome, notification banners. The {% block donation %}
+   child fills the body via the `content` block defined by document.njk.
+#}
+{% extends "document.njk" %}
+
+{% block content %}
+  <header class="page-header">
+    <h1 class="page-header__heading">{{ title }}</h1>
+    {% if subtitle %}<p class="page-header__description">{{ subtitle }}</p>{% endif %}
+  </header>
+
+  {% block donation %}{% endblock %}
+{% endblock %}

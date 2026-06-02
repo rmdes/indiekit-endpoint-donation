@@ -1,0 +1,33 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: campaign.title }) %}
+    <dl>
+      <dt>Stripe Product ID</dt><dd><code>{{ campaign.stripe_product_id }}</code></dd>
+      <dt>Sous-titre</dt><dd>{{ campaign.subtitle }}</dd>
+      <dt>{{ __("donation.campaigns.goal") }}</dt><dd>{% if campaign.goal_cents %}{{ (campaign.goal_cents / 100) | round(0) }} €{% else %}—{% endif %}</dd>
+      <dt>{{ __("donation.campaigns.raised") }}</dt><dd><strong>{{ (campaign.raised_cents / 100) | round(0) }} €</strong></dd>
+      <dt>{{ __("donation.campaigns.donors") }}</dt><dd>{{ campaign.donor_count }}</dd>
+      <dt>{{ __("donation.stats.last_sync") }}</dt><dd>{{ campaign.last_synced_at | date("PPpp") }}</dd>
+    </dl>
+  {% endcall %}
+
+  {% call section({ title: "Réglages locaux" }) %}
+    <p class="hint">
+      Ces réglages restent locaux à Indiekit (non envoyés à Stripe).
+      Pour modifier le titre, l'objectif ou les dates, éditer le Produit
+      directement dans Stripe Dashboard puis cliquer « Synchroniser ».
+    </p>
+    <form method="post" action="{{ baseUrl }}/campaigns/{{ campaign.stripe_product_id }}/edit">
+      <label>
+        <input name="hidden_on_public" type="checkbox" {% if campaign.hidden_on_public %}checked{% endif %}>
+        {{ __("donation.campaigns.hidden_on_public") }}
+      </label>
+      <label>
+        Ordre d'affichage
+        <input name="display_order" type="number" value="{{ campaign.display_order or 100 }}">
+      </label>
+      {{ button({ type: "submit", text: __("donation.save") }) }}
+    </form>
+  {% endcall %}
+{% endblock %}

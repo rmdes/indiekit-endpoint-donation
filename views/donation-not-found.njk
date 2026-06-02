@@ -1,0 +1,8 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: "Introuvable" }) %}
+    <p>Cette entrée n'existe pas ou a été supprimée.</p>
+    {{ button({ href: baseUrl, text: "Retour au tableau de bord", classes: "button--secondary" }) }}
+  {% endcall %}
+{% endblock %}

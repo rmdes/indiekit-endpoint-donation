@@ -1,0 +1,69 @@
+{
+  "donation": {
+    "title": "Dons",
+    "description": "Gérer les dons et campagnes Stripe",
+    "never": "Jamais",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirm": "Êtes-vous sûr ?",
+
+    "stats": {
+      "title": "Aperçu",
+      "lifetime_total": "Total collecté à vie",
+      "donor_count": "Donateurs uniques",
+      "donation_count": "Dons",
+      "active_campaigns": "Campagnes actives",
+      "last_sync": "Dernière synchronisation Stripe"
+    },
+
+    "actions": {
+      "title": "Actions",
+      "sync_stripe": "Synchroniser depuis Stripe",
+      "trigger_rebuild": "Déclencher la reconstruction du site",
+      "add_manual": "Ajouter un don hors-ligne"
+    },
+
+    "donations": {
+      "title": "Dons",
+      "empty": "Aucun don pour le moment."
+    },
+
+    "campaigns": {
+      "title": "Campagnes",
+      "active": "Actives",
+      "archived": "Archivées",
+      "synced_from_stripe": "Synchronisées depuis Stripe",
+      "raised": "Collecté",
+      "goal": "Objectif",
+      "donors": "Donateurs",
+      "hidden_on_public": "Masquer sur la page de transparence publique"
+    },
+
+    "manual": {
+      "title": "Ajouter un don hors-ligne",
+      "action": "Ajouter un don",
+      "fields": {
+        "amount": "Montant (€)",
+        "campaign": "Campagne",
+        "date": "Date de réception",
+        "donor_display": "Nom du donateur (vide = anonyme)",
+        "message": "Message du donateur",
+        "consent_public": "Afficher le nom publiquement",
+        "note": "Note interne (non publique)"
+      },
+      "error": {
+        "title": "Impossible d'ajouter le don",
+        "required": "Le montant, la campagne et la date sont requis."
+      }
+    },
+
+    "consent": {
+      "public": "Public",
+      "anonymous": "Anonyme",
+      "hidden": "Masqué",
+      "toggle": "Basculer l'affichage public"
+    }
+  }
+}

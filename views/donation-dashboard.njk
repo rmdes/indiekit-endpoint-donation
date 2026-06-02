@@ -1,0 +1,100 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+
+  {% call section({ title: __("donation.stats.title") }) %}
+    <dl class="donation-stats">
+      <div class="donation-stat">
+        <dt>{{ __("donation.stats.lifetime_total") }}</dt>
+        <dd><strong>{{ (stats.lifetime_total_cents / 100) | round(0) }} €</strong></dd>
+      </div>
+      <div class="donation-stat">
+        <dt>{{ __("donation.stats.donation_count") }}</dt>
+        <dd>{{ stats.donation_count }}</dd>
+      </div>
+      <div class="donation-stat">
+        <dt>{{ __("donation.stats.donor_count") }}</dt>
+        <dd>{{ stats.donor_count }}</dd>
+      </div>
+      <div class="donation-stat">
+        <dt>{{ __("donation.stats.active_campaigns") }}</dt>
+        <dd>{{ stats.active_campaign_count }}</dd>
+      </div>
+    </dl>
+
+    <div class="donation-actions">
+      {{ button({ href: baseUrl + "/donations", text: __("donation.donations.title"), classes: "button--secondary" }) }}
+      {{ button({ href: baseUrl + "/campaigns", text: __("donation.campaigns.title"), classes: "button--secondary" }) }}
+      {{ button({ href: baseUrl + "/manual", text: __("donation.manual.action") }) }}
+    </div>
+  {% endcall %}
+
+  {% call section({ title: __("donation.actions.title") }) %}
+    <div class="donation-actions">
+      <form method="post" action="{{ baseUrl }}/sync" style="display: inline;">
+        {{ button({ type: "submit", text: __("donation.actions.sync_stripe"), classes: "button--secondary" }) }}
+      </form>
+      <form method="post" action="{{ baseUrl }}/rebuild" style="display: inline;">
+        {{ button({ type: "submit", text: __("donation.actions.trigger_rebuild"), classes: "button--secondary" }) }}
+      </form>
+    </div>
+  {% endcall %}
+
+  {% if activeCampaigns.length > 0 %}
+  {% call section({ title: __("donation.campaigns.active") }) %}
+    <ul class="donation-campaign-list">
+      {% for c in activeCampaigns %}
+      <li class="donation-campaign-row">
+        <a href="{{ baseUrl }}/campaigns/{{ c.stripe_product_id }}">
+          <strong>{{ c.title }}</strong>
+        </a>
+        <span class="donation-campaign-row__totals">
+          {{ (c.raised_cents / 100) | round(0) }} € / {{ (c.goal_cents / 100) | round(0) }} €
+          &middot; {{ c.donor_count }} {{ __("donation.campaigns.donors") | lower }}
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endcall %}
+  {% endif %}
+
+  {% call section({ title: __("donation.donations.title") + " — récents" }) %}
+    {% if recent.length == 0 %}
+      <p>{{ __("donation.donations.empty") }}</p>
+    {% else %}
+    <table class="donation-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Montant</th>
+          <th>Donateur</th>
+          <th>Campagne</th>
+          <th>Source</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in recent %}
+        <tr>
+          <td>{{ d.date | date("PPpp") }}</td>
+          <td>{{ (d.amount_cents / 100) | round(0) }} {{ d.currency }}</td>
+          <td>
+            {% if d.donor.consent_public and d.donor.display %}
+              {{ d.donor.display }}
+            {% elif d.donor.consent_public %}
+              <em>Anonyme</em>
+            {% else %}
+              <em>Masqué</em>
+            {% endif %}
+          </td>
+          <td>{{ d.campaign_id }}</td>
+          <td><code>{{ d.source }}</code></td>
+          <td>{{ button({ href: baseUrl + "/donations/" + d.stripe_id, text: __("donation.edit"), classes: "button--small button--secondary" }) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  {% endcall %}
+
+{% endblock %}

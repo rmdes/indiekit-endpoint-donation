@@ -1,0 +1,69 @@
+{
+  "donation": {
+    "title": "Donations",
+    "description": "Manage Stripe-backed donations and campaigns",
+    "never": "Never",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Are you sure?",
+
+    "stats": {
+      "title": "Overview",
+      "lifetime_total": "Lifetime total",
+      "donor_count": "Unique donors",
+      "donation_count": "Donations",
+      "active_campaigns": "Active campaigns",
+      "last_sync": "Last Stripe sync"
+    },
+
+    "actions": {
+      "title": "Actions",
+      "sync_stripe": "Sync from Stripe",
+      "trigger_rebuild": "Trigger site rebuild",
+      "add_manual": "Add offline donation"
+    },
+
+    "donations": {
+      "title": "Donations",
+      "empty": "No donations yet."
+    },
+
+    "campaigns": {
+      "title": "Campaigns",
+      "active": "Active",
+      "archived": "Archived",
+      "synced_from_stripe": "Synced from Stripe",
+      "raised": "Raised",
+      "goal": "Goal",
+      "donors": "Donors",
+      "hidden_on_public": "Hide on public transparence page"
+    },
+
+    "manual": {
+      "title": "Add an offline donation",
+      "action": "Add donation",
+      "fields": {
+        "amount": "Amount (€)",
+        "campaign": "Campaign",
+        "date": "Date received",
+        "donor_display": "Donor name (or leave empty for anonymous)",
+        "message": "Donor message",
+        "consent_public": "Show donor name publicly",
+        "note": "Internal note (not shown publicly)"
+      },
+      "error": {
+        "title": "Could not add donation",
+        "required": "Amount, campaign, and date are required."
+      }
+    },
+
+    "consent": {
+      "public": "Public",
+      "anonymous": "Anonymous",
+      "hidden": "Hidden",
+      "toggle": "Toggle public display"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: title }) %}
+    {# TODO: filter controls (campaign, source, date range) #}
+    <table class="donation-table">
+      <thead>
+        <tr>
+          <th>Date</th><th>Montant</th><th>Donateur</th><th>Campagne</th><th>Source</th><th>Consentement</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in donations %}
+        <tr>
+          <td>{{ d.date | date("yyyy-MM-dd HH:mm") }}</td>
+          <td>{{ (d.amount_cents / 100) | round(0) }} {{ d.currency }}</td>
+          <td>
+            {% if d.donor.display %}{{ d.donor.display }}{% else %}<em>Anonyme</em>{% endif %}
+          </td>
+          <td>{{ d.campaign_id }}</td>
+          <td><code>{{ d.source }}</code></td>
+          <td>{% if d.donor.consent_public %}{{ __("donation.consent.public") }}{% else %}{{ __("donation.consent.hidden") }}{% endif %}</td>
+          <td>{{ button({ href: baseUrl + "/donations/" + d.stripe_id, text: __("donation.edit"), classes: "button--small" }) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endcall %}
+{% endblock %}

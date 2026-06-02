@@ -1,0 +1,37 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: donation.stripe_id }) %}
+    <dl>
+      <dt>Date</dt><dd>{{ donation.date | date("PPpp") }}</dd>
+      <dt>Montant</dt><dd>{{ (donation.amount_cents / 100) | round(0) }} {{ donation.currency }}</dd>
+      <dt>Campagne</dt><dd>{{ donation.campaign_id }}</dd>
+      <dt>Source</dt><dd><code>{{ donation.source }}</code></dd>
+    </dl>
+  {% endcall %}
+
+  {% call section({ title: "Donateur" }) %}
+    <form method="post" action="{{ baseUrl }}/donations/{{ donation.stripe_id }}/edit">
+      <label>
+        Nom affiché
+        <input name="display" type="text" value="{{ donation.donor.display or '' }}">
+      </label>
+      <label>
+        Message
+        <textarea name="message" rows="3">{{ donation.donor.message or '' }}</textarea>
+      </label>
+      <label>
+        <input name="consent_public" type="checkbox" {% if donation.donor.consent_public %}checked{% endif %}>
+        Afficher publiquement
+      </label>
+      {{ button({ type: "submit", text: __("donation.save") }) }}
+    </form>
+  {% endcall %}
+
+  {% call section({ title: "Actions" }) %}
+    <form method="post" action="{{ baseUrl }}/donations/{{ donation.stripe_id }}/delete"
+          onsubmit="return confirm('{{ __("donation.confirm") }}');" style="display: inline;">
+      {{ button({ type: "submit", text: __("donation.delete"), classes: "button--warning" }) }}
+    </form>
+  {% endcall %}
+{% endblock %}

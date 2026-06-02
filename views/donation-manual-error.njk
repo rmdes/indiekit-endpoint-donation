@@ -1,0 +1,8 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: title }) %}
+    <p class="error">{{ message }}</p>
+    {{ button({ href: baseUrl + "/manual", text: __("donation.cancel"), classes: "button--secondary" }) }}
+  {% endcall %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: __("donation.manual.title") }) %}
+    <p class="hint">
+      Pour les dons reçus hors Stripe (virement bancaire, espèces lors d'un évènement, etc.).
+      Ces dons s'ajoutent aux statistiques publiques mais portent la source <code>manual</code>.
+    </p>
+    <form method="post" action="{{ baseUrl }}/manual">
+      <label>
+        {{ __("donation.manual.fields.amount") }}
+        <input name="amount" type="number" step="0.01" min="0.01" required>
+      </label>
+      <label>
+        {{ __("donation.manual.fields.campaign") }}
+        <select name="campaign_id" required>
+          {% for c in campaigns %}
+          <option value="{{ c.stripe_product_id }}">{{ c.title }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        {{ __("donation.manual.fields.date") }}
+        <input name="date" type="date" required>
+      </label>
+      <label>
+        {{ __("donation.manual.fields.donor_display") }}
+        <input name="donor_display" type="text">
+      </label>
+      <label>
+        {{ __("donation.manual.fields.message") }}
+        <textarea name="message" rows="2"></textarea>
+      </label>
+      <label>
+        <input name="consent_public" type="checkbox" checked>
+        {{ __("donation.manual.fields.consent_public") }}
+      </label>
+      <label>
+        {{ __("donation.manual.fields.note") }}
+        <input name="note" type="text">
+      </label>
+      {{ button({ type: "submit", text: __("donation.manual.action") }) }}
+    </form>
+  {% endcall %}
+{% endblock %}

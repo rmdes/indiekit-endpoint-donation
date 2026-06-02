@@ -1,0 +1,24 @@
+{% extends "layouts/donation.njk" %}
+
+{% block donation %}
+  {% call section({ title: title }) %}
+    <p class="hint">{{ __("donation.campaigns.synced_from_stripe") }}.</p>
+    <table class="donation-table">
+      <thead>
+        <tr><th>Titre</th><th>État</th><th>{{ __("donation.campaigns.raised") }}</th><th>{{ __("donation.campaigns.goal") }}</th><th>{{ __("donation.campaigns.donors") }}</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for c in campaigns %}
+        <tr>
+          <td><strong>{{ c.title }}</strong></td>
+          <td>{% if c.active %}{{ __("donation.campaigns.active") }}{% else %}{{ __("donation.campaigns.archived") }}{% endif %}</td>
+          <td>{{ (c.raised_cents / 100) | round(0) }} €</td>
+          <td>{% if c.goal_cents %}{{ (c.goal_cents / 100) | round(0) }} €{% else %}—{% endif %}</td>
+          <td>{{ c.donor_count }}</td>
+          <td>{{ button({ href: baseUrl + "/campaigns/" + c.stripe_product_id, text: __("donation.edit"), classes: "button--small" }) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endcall %}
+{% endblock %}
