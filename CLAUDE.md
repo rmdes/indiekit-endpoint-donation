@@ -22,8 +22,12 @@ consume, and triggers an Eleventy rebuild on each webhook.
 - File-touch rebuild trigger compatible with `eleventy --watch`.
 
 **npm Package:** `@rmdes/indiekit-endpoint-donation`
-**Version:** 0.1.0-alpha.1
+
+**Version:** See `package.json` (currently alpha; follows semantic versioning)
+
 **Mount Path:** `/donation` (default, configurable)
+
+**Deployed on:** chardonsbleus only (optional endpoint tier in registry)
 
 ## Architecture
 
@@ -146,5 +150,40 @@ timestamp, last successful webhook, etc.
 
 ## Status
 
-Alpha. Scaffolded 2026-05-21. See README.md for current implementation
-progress and TODOs.
+Alpha. Scaffolded May 2026, deployed on chardonsbleus. See README.md for installation and environment setup. See index.js and lib/ for current implementation details.
+
+## Plugin Origin
+
+**ORIGINAL plugin** — no upstream `@indiekit/*` equivalent. Developed for
+chardonsbleus fundraising campaigns.
+
+**Registry status:** Endpoints tier in `indiekit-cloudron` (optional,
+`default_enabled: false`). Enabled only on chardonsbleus site.
+
+## Installation & Configuration
+
+See README.md for Stripe setup and environment variables.
+
+In `indiekit.config.js`:
+
+```javascript
+import DonationEndpoint from "@rmdes/indiekit-endpoint-donation";
+
+export default {
+  plugins: [
+    new DonationEndpoint({
+      mountPath: "/donation",
+      // siteDir and rebuildTrigger usually from env vars:
+      // INDIEKIT_DONATION_SITE_DIR
+      // INDIEKIT_DONATION_REBUILD_TRIGGER
+    }),
+    // ...
+  ],
+};
+```
+
+## Related Documentation
+
+- **Design & data model:** README.md, this file
+- **Deployed on:** `/sites/chardonsbleus/` in indiekit-cloudron
+- **Plugin registry entry:** `plugin-registry.yaml` endpoints tier (key: `donation`)

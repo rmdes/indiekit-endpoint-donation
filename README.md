@@ -7,12 +7,9 @@ a static Eleventy site with live JSON + rebuild triggers.
 
 ## Status
 
-**Alpha — scaffold only.** Routes and views are in place; webhook
-verification, sync scheduling, and storage are implemented. Tested
-end-to-end is still TODO. Do not connect a live Stripe key against a
-production webhook URL yet.
+**Alpha.** Scaffold implemented with routes, views, webhook verification, sync scheduling, and MongoDB storage. Deployed on chardonsbleus (see `package.json` for version). See [CLAUDE.md](./CLAUDE.md) for architecture, data model, and routes.
 
-See [CLAUDE.md](./CLAUDE.md) for architecture, data model, and routes.
+**Maturity note:** Version `0.1.0-alpha.x` — API may shift before `1.0.0`.
 
 ## Install
 
@@ -81,6 +78,12 @@ INDIEKIT_DONATION_CURRENCY=EUR
 - `GET /donation/stats/:campaignId.json` — single-campaign totals.
 - `POST /donation/webhook` — Stripe webhook receiver (rejects without
   signature).
+
+## Plugin Origin
+
+**ORIGINAL plugin** — no upstream `@indiekit/*` equivalent. Developed for chardonsbleus fundraising campaigns.
+
+**Registry status:** Endpoints tier in `indiekit-cloudron` — optional, deployed only on chardonsbleus.
 
 ## License
 
