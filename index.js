@@ -13,6 +13,7 @@ import { syncController } from "./lib/controllers/sync.js";
 import { consentController } from "./lib/controllers/consent.js";
 import { webhookController } from "./lib/controllers/webhook.js";
 import { statsController } from "./lib/controllers/stats.js";
+import { DONATION_BLOCKS } from "./lib/blocks.js";
 
 import { createIndexes } from "./lib/storage/indexes.js";
 import { startStripeSync, stopStripeSync } from "./lib/sync/scheduler.js";
@@ -90,32 +91,42 @@ export default class DonationEndpoint {
     router.post("/sync", syncController.runOnce);
     router.post("/rebuild", syncController.triggerRebuild);
 
-    // Stats JSON (donor-data-sanitized but still admin-only as defense
-    // in depth — the public Eleventy site reads MongoDB directly via the
-    // _data/donations.js loader, not via this HTTP endpoint).
-    router.get("/stats.json", statsController.json);
-    router.get("/stats/:campaignId.json", statsController.byCampaign);
-
     return router;
   }
 
-  // Public routes — Stripe webhook ONLY. Everything else (stats, donations,
-  // campaigns) is under the admin-protected `routes` getter above.
+  // Public routes — Stripe webhook + sanitized stats JSON. Admin surfaces
+  // (donations, campaigns, manual entry) stay under the protected `routes`
+  // getter above.
   //
   // Rate-limit the webhook endpoint to bound damage from a misbehaving
   // upstream OR a forged-but-unsigned flood. Stripe typically sends one
   // event at a time with exponential backoff on failure — 60/min/IP is
   // well above legitimate traffic and well below "abuse" threshold.
+  //
+  // stats.json is public BY DESIGN (site-builder spec: the donation-campaign
+  // block fetches it client-side; the build-time _data/donations.js MongoDB
+  // read is gone under one-neutral-theme). The controller sanitizes: hidden
+  // campaigns filtered, donor PII gated on consent_public, 60s Cache-Control.
+  // Rate-limited because each hit runs MongoDB aggregations.
   get routesPublic() {
     const router = express.Router();
 
-    const webhookLimiter = rateLimit({
+    // validate.trustProxy: false — indiekit core does app.enable("trust proxy")
+    // (permissive), which express-rate-limit warns about on EVERY request.
+    // Topology reviewed 2026-07-24: Cloudron's platform proxy OVERWRITES
+    // client-supplied X-Forwarded-For and the app-local nginx only appends,
+    // so req.ip is the genuine client IP and per-IP keying works. Silencing
+    // the known-safe warning, not the check that matters.
+    const limiterOptions = {
       windowMs: 60 * 1000,        // 1 minute window
       max: 60,                    // 60 requests per IP per window
       message: { error: "rate_limited" },
       standardHeaders: true,
       legacyHeaders: false,
-    });
+      validate: { trustProxy: false },
+    };
+    const webhookLimiter = rateLimit(limiterOptions);
+    const statsLimiter = rateLimit(limiterOptions);
 
     router.post(
       "/webhook",
@@ -124,7 +135,16 @@ export default class DonationEndpoint {
       webhookController.receive,
     );
 
+    router.get("/stats.json", statsLimiter, statsController.json);
+    router.get("/stats/:campaignId.json", statsLimiter, statsController.byCampaign);
+
     return router;
+  }
+
+  // v2 block contract — consumed by site-config's scanPlugins; the block is
+  // in a site's catalog only when this plugin is loaded (catalog = the gate).
+  get blocks() {
+    return DONATION_BLOCKS;
   }
 
   init(Indiekit) {

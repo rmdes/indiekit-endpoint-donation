@@ -137,6 +137,33 @@ timestamp, last successful webhook, etc.
 | GET    | `/stats.json`                   | stats.json        |
 | GET    | `/stats/:campaignId.json`       | stats.byCampaign  |
 
+All public routes are rate-limited (60/min/IP; `validate.trustProxy`
+silenced — topology reviewed, Cloudron's proxy overwrites XFF so per-IP
+keying is genuine). The stats routes became public in v0.1.0-alpha.4 (they
+were admin-mounted before) to serve the `donation-campaign` block's
+client-side fetch. Public-payload privacy contract (security review
+2026-07-24): campaign/lifetime AGGREGATES only — **no individual donation
+records** (the old sanitized `donations` array was removed; per-donation
+amount/date/campaign could de-anonymize non-consenting donors);
+`hidden_on_public` campaigns are excluded from the list AND 404 on
+`/stats/:campaignId.json`; errors return an opaque 500 (never indiekit's
+stack-including core handler); 30s in-process payload cache bounds the
+aggregation fan-out. If a transparency/donor-wall surface is ever built,
+add a dedicated consenting-donors-only endpoint — do not re-add
+`donations` to stats.json.
+
+## Site-Builder Block
+
+`get blocks()` (v0.1.0-alpha.4) declares the **`donation-campaign`** v2 block
+(`lib/blocks.js`): `data.source:"api"`, bespoke (no generic renderer), region
+`main` (no compact widget variant yet), surfaces `homepage`/`standalone`,
+`multiple: true`. Config:
+optional `campaignId` (Stripe product id; empty = all active campaigns) and
+`title` heading override. The theme owns the rendering pair:
+`_includes/components/sections/donation-campaign.njk` +
+`js/widgets/donation-campaign.js` (Alpine, fetches `/donation/stats.json`
+client-side — live counters without a rebuild).
+
 ## Environment
 
 | Variable                          | Required | Notes                                  |

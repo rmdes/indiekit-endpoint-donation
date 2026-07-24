@@ -1,6 +1,6 @@
 {
   "name": "@rmdes/indiekit-endpoint-donation",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "description": "Stripe-backed donation endpoint for Indiekit. Treats Stripe Products as campaigns, PaymentIntents/Checkout Sessions as donations, exposes admin UI + public stats API + rebuild trigger.",
   "keywords": [
     "indiekit",
@@ -21,6 +21,9 @@
   },
   "type": "module",
   "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  },
   "files": [
     "lib",
     "views",
