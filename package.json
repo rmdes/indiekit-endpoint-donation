@@ -1,6 +1,6 @@
 {
   "name": "@rmdes/indiekit-endpoint-donation",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.NaN",
   "description": "Stripe-backed donation endpoint for Indiekit. Treats Stripe Products as campaigns, PaymentIntents/Checkout Sessions as donations, exposes admin UI + public stats API + rebuild trigger.",
   "keywords": [
     "indiekit",
@@ -42,9 +42,6 @@
     "express": "^5.0.0",
     "express-rate-limit": "^8.5.2",
     "stripe": "^17.0.0"
-  },
-  "peerDependencies": {
-    "@indiekit/indiekit": ">=1.0.0-beta.25"
   },
   "publishConfig": {
     "access": "public"
